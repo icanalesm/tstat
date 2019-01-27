@@ -36,8 +36,10 @@ static const struct map_ps btst[] = {
  */
 static const struct map_ps volst[] = {
 	/* perc  state      str */
+	{   0,   "Unmute",  "\uf026  " },
+	{  30,   "Unmute",  "\uf027 " },
 	{ 100,   "Unmute",  "\uf028" },
-	{ 100,   "Mute",    "\uf026  " },
+	{ 100,   "Mute",    "\uf6a9" },
 };
 
 /* Wi-Fi state map */
