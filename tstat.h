@@ -7,7 +7,7 @@ struct arg {
 struct map_ps {
 	int   perc;
 	char *state;
-	char *str;
+	char *fmt;
 };
 
 struct mixer {

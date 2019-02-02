@@ -58,8 +58,7 @@ const char *battery(const void *bat)
 
 	for (i = 0; i < LEN(batst); i++) {
 		if (!strcmp(batst[i].state, buf) && perc <= batst[i].perc) {
-			esnprintf(buf, sizeof(buf), "%s %d%%", batst[i].str,
-			          perc);
+			esnprintf(buf, sizeof(buf), batst[i].fmt, perc);
 			return buf;
 		}
 	}
@@ -77,7 +76,7 @@ const char *bluetooth_state(const void *rfdev)
 
 	for (i = 0; i < LEN(btst); i++) {
 		if (!strcmp(btst[i].state, state))
-			return btst[i].str;
+			return btst[i].fmt;
 	}
 
 	return NULL;
@@ -163,8 +162,7 @@ const char *volume(const void *mixer)
 
 	for (i = 0; i < LEN(volst); i++) {
 		if (!strcmp(volst[i].state, s[aux]) && vol <= volst[i].perc) {
-			esnprintf(buf, sizeof(buf), "%s %ld%%", volst[i].str,
-			          vol);
+			esnprintf(buf, sizeof(buf), volst[i].fmt, vol);
 			return buf;
 		}
 	}
@@ -187,7 +185,7 @@ const char *wifi_state(const void *rfdev)
 
 	for (i = 0; i < LEN(wifist); i++) {
 		if (!strcmp(wifist[i].state, state))
-			return wifist[i].str;
+			return wifist[i].fmt;
 	}
 
 	return NULL;
