@@ -9,15 +9,27 @@ static const char unknown_str[] = "n/a";
  *     "Unknown", "Charging", "Discharging", "Not charging", "Full"
  */
 static const struct map_ps batst[] = {
-	/* perc  state           str */
-	{ 100,   "Charging",     "\uf0e7"    },
-	{  10,   "Discharging",  "\uf244"    },
-	{  35,   "Discharging",  "\uf243"    },
-	{  60,   "Discharging",  "\uf242"    },
-	{  80,   "Discharging",  "\uf241"    },
-	{ 100,   "Discharging",  "\uf240",   },
-	{ 100,   "Full",         "\uf1e6",   },
-	{ 100,   "Unknown",      "\uf244(?)" },
+	/* perc  state           fmt */
+	{ 100,   "Charging",     "\uf0e7 %d%%"    },
+	{  10,   "Discharging",  "\uf244 %d%%"    },
+	{  35,   "Discharging",  "\uf243 %d%%"    },
+	{  60,   "Discharging",  "\uf242 %d%%"    },
+	{  80,   "Discharging",  "\uf241 %d%%"    },
+	{ 100,   "Discharging",  "\uf240 %d%%",   },
+	{ 100,   "Full",         "\uf1e6 %d%%",   },
+	{ 100,   "Unknown",      "\uf244(?) %d%%" },
+};
+
+/* Volume state map */
+/* Possible state values:
+ *     "Unmute", "Mute"
+ */
+static const struct map_ps volst[] = {
+	/* perc  state      fmt */
+	{   0,   "Unmute",  "\uf026   %ld%%" },
+	{  30,   "Unmute",  "\uf027  %ld%%"  },
+	{ 100,   "Unmute",  "\uf028 %ld%%"   },
+	{ 100,   "Mute",    "\uf6a9 %ld%%"   },
 };
 
 /* Bluetooth state map */
@@ -25,21 +37,9 @@ static const struct map_ps batst[] = {
  *     "On", "Off"
  */
 static const struct map_ps btst[] = {
-	/* perc  state   str */
+	/* perc  state   fmt */
 	{ -1,    "On",   "on" },
 	{ -1,    "Off",  "off" },
-};
-
-/* Volume state map */
-/* Possible state values: 
- *     "Unmute", "Mute"
- */
-static const struct map_ps volst[] = {
-	/* perc  state      str */
-	{   0,   "Unmute",  "\uf026  " },
-	{  30,   "Unmute",  "\uf027 " },
-	{ 100,   "Unmute",  "\uf028" },
-	{ 100,   "Mute",    "\uf6a9" },
 };
 
 /* Wi-Fi state map */
@@ -47,7 +47,7 @@ static const struct map_ps volst[] = {
  *     "On", "Off"
  */
 static const struct map_ps wifist[] = {
-	/* perc  state   str */
+	/* perc  state   fmt */
 	{ -1,    "On",   "on" },
 	{ -1,    "Off",  "off" },
 };
