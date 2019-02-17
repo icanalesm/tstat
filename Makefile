@@ -25,10 +25,12 @@ clean:
 
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
-	cp -f tstat ${DESTDIR}${PREFIX}/bin
+	cp -f tstat tstatr ${DESTDIR}${PREFIX}/bin
 	chmod 755 ${DESTDIR}${PREFIX}/bin/tstat
+	chmod 755 ${DESTDIR}${PREFIX}/bin/tstatr
 
 uninstall:
-	rm -f ${DESTDIR}${PREFIX}/bin/tstat
+	rm -f ${DESTDIR}${PREFIX}/bin/tstat\
+	      ${DESTDIR}${PREFIX}/bin/tstatr
 
 .PHONY: all options clean install uninstall
