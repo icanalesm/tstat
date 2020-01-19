@@ -17,12 +17,6 @@ options:
 .c.o:
 	${CC} ${CPPFLAGS} ${CFLAGS} -c -o $@ $<
 
-#util.o: util.c util.h
-#	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
-
-#tstat.o: tstat.c tstat.h config.h util.h
-#	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
-
 tstat: tstat.o ${COM:=.o}
 	${CC} ${LDLIBS} ${COM:=.o} -o $@
 
