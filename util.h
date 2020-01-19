@@ -1,3 +1,5 @@
+#include <stddef.h>
+
 #define LEN(X)  (sizeof(X) / sizeof((X)[0]))                                          
 
 void error(const char *fmt, ...);

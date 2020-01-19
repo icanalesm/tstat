@@ -6,22 +6,15 @@ struct arg {
 
 struct map_ps {
 	int   perc;
-	char *state;
+	int   status;
 	char *fmt;
 };
 
-struct mixer {
-	char *card;
-	char *name;
-	int   index;
-};
-
-
 /* Battery */
-const char *battery(const void *bat);
+const char *battery(const void *battery);
 
 /* Bluetooth */
-const char *bluetooth_state(const void *rfdev);
+const char *bluetooth(const void *rfdev);
 
 /* Date */
 const char *datetime(const void *fmt);
@@ -30,5 +23,4 @@ const char *datetime(const void *fmt);
 const char *volume(const void *mixer);
 
 /* Wi-Fi */
-const char *wifi_state(const void *rfdev);
-
+const char *wifi(const void *rfdev);

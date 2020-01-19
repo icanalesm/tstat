@@ -1,6 +1,9 @@
 include config.mk
 
 COM =\
+	components/battery\
+	components/rfkill\
+	components/volume\
 	util\
 	tstat
 
@@ -11,14 +14,17 @@ options:
 	@echo "CFLAGS = ${CFLAGS}"
 	@echo "CC     = ${CC}"
 
-util.o: util.c util.h
-	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
+.c.o:
+	${CC} ${CPPFLAGS} ${CFLAGS} -c -o $@ $<
 
-tstat.o: tstat.c tstat.h config.h util.h
-	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
+#util.o: util.c util.h
+#	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
 
-tstat: ${COM:=.o}
-	${CC} -o $@ ${COM:=.o} ${LDLIBS}
+#tstat.o: tstat.c tstat.h config.h util.h
+#	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
+
+tstat: tstat.o ${COM:=.o}
+	${CC} ${LDLIBS} ${COM:=.o} -o $@
 
 clean:
 	rm -f tstat tstat.o ${COM:=.o}
