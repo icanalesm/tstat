@@ -1,6 +1,3 @@
-//enum battery_status { Charging, Discharging, NotCharging, Full, Unknown };
-//enum rfkill_status { Unblock, BlockSw, BlockHw }
-//enum volume_status { Mute, Unmute };
 enum { Charging, Discharging, NotCharging, Full, Unknown };
 enum { Unblock, BlockSw, BlockHw };
 enum { Mute, Unmute };
