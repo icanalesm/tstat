@@ -14,7 +14,7 @@ options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "CPPFLAGS = ${CPPFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
-	@echo "LDLIBS   = ${CFLAGS}"
+	@echo "LDLIBS   = ${LDLIBS}"
 	@echo "CC       = ${CC}"
 
 .c.o:
