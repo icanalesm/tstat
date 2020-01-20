@@ -1,6 +1,6 @@
 include config.mk
 
-COM =\
+REQ =\
 	info/battery\
 	info/rfkill\
 	info/volume\
@@ -11,17 +11,20 @@ all: options tstat
 
 options:
 	@echo tstat build options:
-	@echo "CFLAGS = ${CFLAGS}"
-	@echo "CC     = ${CC}"
+	@echo "CFLAGS   = ${CFLAGS}"
+	@echo "CPPFLAGS = ${CPPFLAGS}"
+	@echo "LDFLAGS  = ${LDFLAGS}"
+	@echo "LDLIBS   = ${CFLAGS}"
+	@echo "CC       = ${CC}"
 
 .c.o:
-	${CC} ${CPPFLAGS} ${CFLAGS} -c -o $@ $<
+	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
 
-tstat: tstat.o ${COM:=.o}
-	${CC} ${LDLIBS} ${COM:=.o} -o $@
+tstat: ${REQ:=.o}
+	${CC} ${CFLAGS} ${LDFLAGS} ${LDLIBS} ${REQ:=.o} -o $@
 
 clean:
-	rm -f tstat tstat.o ${COM:=.o}
+	rm -f tstat ${REQ:=.o}
 
 install: all
 	mkdir -p ${DESTDIR}${PREFIX}/bin
