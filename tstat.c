@@ -5,7 +5,7 @@
 #include <time.h>
 #include <X11/Xlib.h>
 
-#include "components/info.h"
+#include "info/info.h"
 #include "util.h"
 #include "tstat.h"
 

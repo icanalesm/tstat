@@ -1,9 +1,9 @@
 include config.mk
 
 COM =\
-	components/battery\
-	components/rfkill\
-	components/volume\
+	info/battery\
+	info/rfkill\
+	info/volume\
 	util\
 	tstat
 
