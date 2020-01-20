@@ -7,7 +7,24 @@
 
 #include "info/info.h"
 #include "util.h"
-#include "tstat.h"
+
+struct arg {
+	const char *(*func)();
+	const char *fmt;
+	const void *arg;
+};
+
+struct map_ps {
+	int   perc;
+	int   status;
+	char *fmt;
+};
+
+const char *battery(const void *battery);
+const char *bluetooth(const void *rfdev);
+const char *datetime(const void *fmt);
+const char *volume(const void *mixer);
+const char *wifi(const void *rfdev);
 
 static char buf[64];
 
