@@ -139,10 +139,11 @@ int main(int argc, char *argv[])
 			error("XOpenDisplay: Failed to open display");
 			return -1;
 		}
-		if (XStoreName(dpy, DefaultRootWindow(dpy), status) < 0)
+		if (XStoreName(dpy, DefaultRootWindow(dpy), status) < 0) {
 			error("XStoreName: Allocation failed");
-		else
-			XFlush(dpy);
+			return -1;
+		}
+		XFlush(dpy);
 		if (XCloseDisplay(dpy) < 0) {
 			error("XCloseDisplay: Failed to close display");
 			return -1;
