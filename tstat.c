@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 	if (argc > 1 && strcmp(argv[1], "set") == 0) {
 		if (!(dpy = XOpenDisplay(NULL))) {
 			error("XOpenDisplay: Failed to open display");
-			exit(1);
+			return -1;
 		}
 		if (XStoreName(dpy, DefaultRootWindow(dpy), status) < 0)
 			error("XStoreName: Allocation failed");
@@ -145,14 +145,14 @@ int main(int argc, char *argv[])
 			XFlush(dpy);
 		if (XCloseDisplay(dpy) < 0) {
 			error("XCloseDisplay: Failed to close display");
-			exit(1);
+			return -1;
 		}
 	} else {
 		puts(status);
 		fflush(stdout);
 		if (ferror(stdout)) {
 			error("puts: %s", strerror(errno));
-			exit(1);
+			return -1;
 		}
 	}
 
