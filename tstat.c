@@ -8,6 +8,8 @@
 #include "info/info.h"
 #include "util.h"
 
+#define BFR_MAX    128
+
 struct arg {
 	const char *(*func)();
 	const char *fmt;
@@ -26,7 +28,7 @@ const char *datetime(const void *fmt);
 const char *volume(const void *mixer);
 const char *wifi(const void *rfdev);
 
-static char buf[64];
+static char buf[BFR_MAX];
 
 #include "config.h"
 
