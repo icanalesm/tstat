@@ -3,10 +3,10 @@
 #include "info.h"
 #include "../util.h"
 
-#define BAT_CAPACITY_FMT  "/sys/class/power_supply/%s/capacity"
-#define BAT_STATUS_FMT    "/sys/class/power_supply/%s/status"
-#define BAT_STATUS_NUM    5
-#define BFR_MAX           128
+#define BAT_CAPACITY_FMT    "/sys/class/power_supply/%s/capacity"
+#define BAT_STATUS_FMT      "/sys/class/power_supply/%s/status"
+#define BAT_STATUS_NUM      5
+#define BFR_MAX             128
 
 int battery_getinfo(struct battery_info *info, const char *battery)
 {
@@ -18,13 +18,11 @@ int battery_getinfo(struct battery_info *info, const char *battery)
 
 	if (esnprintf(bfr, sizeof(bfr), BAT_CAPACITY_FMT, battery) < 0)
 		return -1;
-
 	if (epscanf(bfr, "%d", &perc) != 1)
 		return -1;
 
 	if (esnprintf(bfr, sizeof(bfr), BAT_STATUS_FMT, battery) < 0)
 		return -1;
-
 	if (epscanf(bfr, "%12s", bfr) != 1)
 		return -1;
 
