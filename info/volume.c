@@ -63,7 +63,7 @@ int volume_getinfo(struct volume_info *info, const struct mixer *mixer)
 	if (max == 0)
 		return -1;
 
-	info->perc = (int) (vol / ((double) max) * 100);
+	info->perc = (100 * vol) / max;
 	info->status = (aux) ? Unmute : Mute;
 
 	return 0;
