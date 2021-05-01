@@ -16,9 +16,9 @@ static const struct ps_map battery_map[] = {
 	{  35,   Discharging,    "\uf243 %d%%"    },
 	{  60,   Discharging,    "\uf242 %d%%"    },
 	{  80,   Discharging,    "\uf241 %d%%"    },
-	{ 100,   Discharging,    "\uf240 %d%%",   },
-	{ 100,   Full,           "\uf1e6 %d%%",   },
-	{ 100,   Unknown,        "\uf244(?) %d%%" },
+	{ 100,   Discharging,    "\uf240 %d%%"    },
+	{ 100,   Full,           "\uf1e6 %d%%"    },
+	{ 100,   Unknown,        "\uf244(?) %d%%" } 
 };
 
 /*
@@ -31,7 +31,7 @@ static const struct ps_map volume_map[] = {
 	{   0,   Unmute,    "\uf026   %ld%%" },
 	{  30,   Unmute,    "\uf027  %ld%%"  },
 	{ 100,   Unmute,    "\uf028 %ld%%"   },
-	{ 100,   Mute,      "\uf6a9 %ld%%"   },
+	{ 100,   Mute,      "\uf6a9 %ld%%"   } 
 };
 
 /*
@@ -43,7 +43,7 @@ static const struct ps_map btooth_map[] = {
 	/* perc  state       fmt */
 	{ -1,    Unblock,    "\uf294 on"  },
 	{ -1,    BlockSw,    "\uf294 off" },
-	{ -1,    BlockHw,    "\uf294 off" },
+	{ -1,    BlockHw,    "\uf294 off" } 
 };
 
 /*
@@ -55,13 +55,13 @@ static const struct ps_map wifi_map[] = {
 	/* perc  state       fmt */
 	{ -1,    Unblock,    "\uf1eb on"  },
 	{ -1,    BlockSw,    "\uf1eb off" },
-	{ -1,    BlockHw,    "\uf1eb off" },
+	{ -1,    BlockHw,    "\uf1eb off" } 
 };
 
 /* Mixer device definition */
 static const struct mixer mixers[] = {
 	/* card       name       index */
-	{ "default",  "Master",  0 },
+	{ "default",  "Master",  0 } 
 };
 
 /*
@@ -80,5 +80,5 @@ static const struct arg args[] = {
 	{ wifi,             "%s   ",         "rfkill0" },
 	{ volume_pulse,     "%s   ",         "alsa_output.pci-0000_00_1b.0.output_analog-stereo" },
 	{ battery,          "%s   ",         "BAT0" },
-	{ datetime,         "%s",            "%b %d, %R" },
+	{ datetime,         "%s",            "%b %d, %R" } 
 };
