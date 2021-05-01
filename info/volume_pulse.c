@@ -19,7 +19,7 @@ static void exit_signal_callback(pa_mainloop_api *m, pa_signal_event *e,
 static void get_sink_info_callback(pa_context *c, const pa_sink_info *i,
                                    int is_last, void *userdata)
 {
-	struct volume_info *info = (struct volume_info *) userdata;
+	struct ps_info *info = (struct ps_info *) userdata;
 
 	if (is_last < 0) {
 		error("Failed to get sink information: %s",
@@ -72,7 +72,7 @@ static void context_state_callback(pa_context *c, void *userdata)
 	}
 }
 
-int volume_pulse_getinfo(struct volume_info *info, const char *sink)
+int volume_pulse_getinfo(struct ps_info *info, const char *sink)
 {
 	int ret = 1;
 	pa_mainloop *m = NULL;

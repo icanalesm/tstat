@@ -3,7 +3,7 @@
 #include "info.h"
 #include "../util.h"
 
-int volume_alsa_getinfo(struct volume_info *info, const struct mixer *mixer)
+int volume_alsa_getinfo(struct ps_info *info, const struct mixer *mixer)
 {
 	long vol, min, max;
 	int aux;

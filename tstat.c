@@ -24,7 +24,7 @@ struct map_ps {
 
 static const char *_rfkill(const void *rfdev, const struct map_ps *map,
                            size_t len);
-static const char *_volume(struct volume_info *info);
+static const char *_volume(struct ps_info *info);
 const char *battery(const void *battery);
 const char *bluetooth(const void *rfdev);
 const char *datetime(const void *fmt);
@@ -53,7 +53,7 @@ static const char *_rfkill(const void *rfdev, const struct map_ps *map,
 	return NULL;
 }
 
-static const char *_volume(struct volume_info *info)
+static const char *_volume(struct ps_info *info)
 {
 	size_t i;
 
@@ -71,7 +71,7 @@ static const char *_volume(struct volume_info *info)
 
 const char *battery(const void *battery)
 {
-	struct battery_info info;
+	struct ps_info info;
 	size_t i;
 
 	if (battery_getinfo(&info, (char *) battery) != 0)
@@ -108,7 +108,7 @@ const char *datetime(const void *fmt)
 
 const char *volume_alsa(const void *mixer)
 {
-	struct volume_info info;
+	struct ps_info info;
 
 	if (volume_alsa_getinfo(&info, (struct mixer *) mixer) != 0)
 		return NULL;
@@ -118,7 +118,7 @@ const char *volume_alsa(const void *mixer)
 
 const char *volume_pulse(const void *sink)
 {
-	struct volume_info info;
+	struct ps_info info;
 
 	if (volume_pulse_getinfo(&info, (char *) sink) != 0)
 		return NULL;

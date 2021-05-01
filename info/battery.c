@@ -8,7 +8,7 @@
 #define BAT_STATUS_NUM      5
 #define BFR_MAX             128
 
-int battery_getinfo(struct battery_info *info, const char *battery)
+int battery_getinfo(struct ps_info *info, const char *battery)
 {
 	int perc;
 	size_t i;
