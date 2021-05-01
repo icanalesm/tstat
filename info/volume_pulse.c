@@ -32,8 +32,9 @@ static void get_sink_info_callback(pa_context *c, const pa_sink_info *i,
 		return;
 	}
 	if (i) {
-		info->perc = (float) pa_cvolume_avg(&(i->volume)) * 100 /
-		             (float) PA_VOLUME_NORM;
+		info->perc = ((uint64_t) pa_cvolume_avg(&(i->volume)) * 100 +
+		              (uint64_t) PA_VOLUME_NORM / 2) /
+		             (uint64_t) PA_VOLUME_NORM;
 		info->status = (i->mute) ? Mute : Unmute;
 	} else {
 		quit(1);
