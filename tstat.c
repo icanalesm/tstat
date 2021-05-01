@@ -16,15 +16,16 @@ struct arg {
 	const void *arg;
 };
 
-struct map_ps {
+struct ps_map {
 	int   perc;
 	int   status;
 	char *fmt;
 };
 
-static const char *_rfkill(const void *rfdev, const struct map_ps *map,
+static const char *_rfkill(const void *rfdev, const struct ps_map *map,
                            size_t len);
-static const char *_volume(struct ps_info *info);
+static const char *_ps_stat(struct ps_info *info, const struct ps_map *map,
+                            size_t len);
 const char *battery(const void *battery);
 const char *bluetooth(const void *rfdev);
 const char *datetime(const void *fmt);
@@ -36,7 +37,7 @@ static char buf[BFR_MAX];
 
 #include "config.h"
 
-static const char *_rfkill(const void *rfdev, const struct map_ps *map,
+static const char *_rfkill(const void *rfdev, const struct ps_map *map,
                            size_t len)
 {
 	int info;
@@ -53,15 +54,15 @@ static const char *_rfkill(const void *rfdev, const struct map_ps *map,
 	return NULL;
 }
 
-static const char *_volume(struct ps_info *info)
+static const char *_ps_stat(struct ps_info *info, const struct ps_map *map,
+                            size_t len)
 {
 	size_t i;
 
-	for (i = 0; i < LEN(volume_map); i++) {
-		if (info->perc <= volume_map[i].perc &&
-		    info->status == volume_map[i].status) {
-			esnprintf(buf, sizeof(buf), volume_map[i].fmt,
-			          info->perc);
+	for (i = 0; i < len; i++) {
+		if (info->perc <= map[i].perc &&
+		    info->status == map[i].status) {
+			esnprintf(buf, sizeof(buf), map[i].fmt, info->perc);
 			return buf;
 		}
 	}
@@ -72,20 +73,11 @@ static const char *_volume(struct ps_info *info)
 const char *battery(const void *battery)
 {
 	struct ps_info info;
-	size_t i;
 
 	if (battery_getinfo(&info, (char *) battery) != 0)
 		return NULL;
 
-	for (i = 0; i < LEN(battery_map); i++) {
-		if (info.perc <= battery_map[i].perc &&
-		    info.status == battery_map[i].status) {
-			esnprintf(buf, sizeof(buf), battery_map[i].fmt, info.perc);
-			return buf;
-		}
-	}
-
-	return NULL;
+	return _ps_stat(&info, battery_map, LEN(battery_map));
 }
 
 const char *bluetooth(const void *rfdev)
@@ -113,7 +105,7 @@ const char *volume_alsa(const void *mixer)
 	if (volume_alsa_getinfo(&info, (struct mixer *) mixer) != 0)
 		return NULL;
 
-	return _volume(&info);
+	return _ps_stat(&info, volume_map, LEN(volume_map));
 }
 
 const char *volume_pulse(const void *sink)
@@ -123,7 +115,7 @@ const char *volume_pulse(const void *sink)
 	if (volume_pulse_getinfo(&info, (char *) sink) != 0)
 		return NULL;
 
-	return _volume(&info);
+	return _ps_stat(&info, volume_map, LEN(volume_map));
 }
 
 const char *wifi(const void *rfdev)
