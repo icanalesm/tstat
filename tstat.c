@@ -25,7 +25,7 @@ struct map_ps {
 const char *battery(const void *battery);
 const char *bluetooth(const void *rfdev);
 const char *datetime(const void *fmt);
-const char *volume(const void *mixer);
+const char *volume_alsa(const void *mixer);
 const char *volume_pulse(const void *sink);
 const char *wifi(const void *rfdev);
 
@@ -80,12 +80,12 @@ const char *datetime(const void *fmt)
 	return buf;
 }
 
-const char *volume(const void *mixer)
+const char *volume_alsa(const void *mixer)
 {
 	struct volume_info info;
 	size_t i;
 
-	if (volume_getinfo(&info, (struct mixer *) mixer) != 0)
+	if (volume_alsa_getinfo(&info, (struct mixer *) mixer) != 0)
 		return NULL;
 
 	for (i = 0; i < LEN(volume_map); i++) {

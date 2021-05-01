@@ -3,7 +3,7 @@ include config.mk
 REQ =\
 	info/battery\
 	info/rfkill\
-	info/volume\
+	info/volume_alsa\
 	info/volume_pulse\
 	util\
 	tstat
