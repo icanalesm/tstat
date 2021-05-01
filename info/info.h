@@ -23,3 +23,5 @@ int battery_getinfo(struct battery_info *info, const char *battery);
 int rfkill_getinfo(int *info, const char *rfdev);
 
 int volume_getinfo(struct volume_info *info, const struct mixer *mixer);
+
+int volume_pulse_getinfo(struct volume_info *info, const char *sink);

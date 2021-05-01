@@ -4,6 +4,7 @@ REQ =\
 	info/battery\
 	info/rfkill\
 	info/volume\
+	info/volume_pulse\
 	util\
 	tstat
 

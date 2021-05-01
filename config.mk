@@ -7,7 +7,7 @@ PREFIX = /usr/local
 CFLAGS = -std=iso9899:1999 -Wpedantic -Wall -Wextra -O2
 CPPFLAGS =
 LDFLAGS =
-LDLIBS = -lasound -lX11
+LDLIBS = -lasound -lpulse -lX11
 
 # compiler
 CC = gcc

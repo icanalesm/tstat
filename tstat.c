@@ -26,6 +26,7 @@ const char *battery(const void *battery);
 const char *bluetooth(const void *rfdev);
 const char *datetime(const void *fmt);
 const char *volume(const void *mixer);
+const char *volume_pulse(const void *sink);
 const char *wifi(const void *rfdev);
 
 static char buf[BFR_MAX];
@@ -85,6 +86,25 @@ const char *volume(const void *mixer)
 	size_t i;
 
 	if (volume_getinfo(&info, (struct mixer *) mixer) != 0)
+		return NULL;
+
+	for (i = 0; i < LEN(volume_map); i++) {
+		if (info.perc <= volume_map[i].perc &&
+		    info.status == volume_map[i].status) {
+			esnprintf(buf, sizeof(buf), volume_map[i].fmt, info.perc);
+			return buf;
+		}
+	}
+
+	return NULL;
+}
+
+const char *volume_pulse(const void *mixer)
+{
+	struct volume_info info;
+	size_t i;
+
+	if (volume_pulse_getinfo(&info, (char *) mixer) != 0)
 		return NULL;
 
 	for (i = 0; i < LEN(volume_map); i++) {
