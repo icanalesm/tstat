@@ -86,15 +86,7 @@ int volume_pulse_getinfo(struct volume_info *info, const char *sink)
 	}
 
 	mainloop_api = pa_mainloop_get_api(m);
-/*
-	if (pa_signal_init(mainloop_api) != 0) {
-		error("pa_signal_init() failed.");
-		goto quit;
-	}
-	pa_signal_new(SIGINT, exit_signal_callback, NULL);
-	pa_signal_new(SIGTERM, exit_signal_callback, NULL);
-	pa_disable_sigpipe();
-*/
+
 	if (!(context = pa_context_new(mainloop_api, NULL))) {
 		error("pa_context_new() failed.");
 		goto quit;
@@ -117,10 +109,8 @@ quit:
 	if (context)
 		pa_context_unref(context);
 	
-	if (m) {
-		/* pa_signal_done(); */
+	if (m)
 		pa_mainloop_free(m);
-	}
 
 	return ret;
 }
