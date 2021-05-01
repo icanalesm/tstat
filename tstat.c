@@ -99,12 +99,12 @@ const char *volume_alsa(const void *mixer)
 	return NULL;
 }
 
-const char *volume_pulse(const void *mixer)
+const char *volume_pulse(const void *sink)
 {
 	struct volume_info info;
 	size_t i;
 
-	if (volume_pulse_getinfo(&info, (char *) mixer) != 0)
+	if (volume_pulse_getinfo(&info, (char *) sink) != 0)
 		return NULL;
 
 	for (i = 0; i < LEN(volume_map); i++) {
