@@ -84,22 +84,17 @@ int volume_pulse_getinfo(struct volume_info *info, const char *sink)
 		error("pa_mainloop_new() failed.");
 		goto quit;
 	}
-
 	mainloop_api = pa_mainloop_get_api(m);
-
 	if (!(context = pa_context_new(mainloop_api, NULL))) {
 		error("pa_context_new() failed.");
 		goto quit;
 	}
-
 	pa_context_set_state_callback(context, context_state_callback, info);
-
 	if (pa_context_connect(context, NULL, 0, NULL) < 0) {
 		error("pa_context_connect() failed: %s",
 		       pa_strerror(pa_context_errno(context)));
 		goto quit;
 	}
-
 	if (pa_mainloop_run(m, &ret) < 0) {
 		error("pa_mainloop_run() failed.");
 		goto quit;
