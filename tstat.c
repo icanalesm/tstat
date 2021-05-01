@@ -22,6 +22,8 @@ struct map_ps {
 	char *fmt;
 };
 
+static const char *_rfkill(const void *rfdev, const struct map_ps *map,
+                           size_t len);
 const char *battery(const void *battery);
 const char *bluetooth(const void *rfdev);
 const char *datetime(const void *fmt);
@@ -32,6 +34,22 @@ const char *wifi(const void *rfdev);
 static char buf[BFR_MAX];
 
 #include "config.h"
+
+static const char *_rfkill(const void *rfdev, const struct map_ps *map,
+                           size_t len)
+{
+	int info;
+	size_t i;
+
+	if (rfkill_getinfo(&info, (char *) rfdev) != 0)
+		return NULL;
+	for (i = 0; i < len; i++) {
+		if (info == map[i].status)
+			return map[i].fmt;
+	}
+
+	return NULL;
+}
 
 const char *battery(const void *battery)
 {
@@ -54,17 +72,7 @@ const char *battery(const void *battery)
 
 const char *bluetooth(const void *rfdev)
 {
-	int info;
-	size_t i;
-
-	if (rfkill_getinfo(&info, (char *) rfdev) != 0)
-		return NULL;
-	for (i = 0; i < LEN(btooth_map); i++) {
-		if (info == btooth_map[i].status)
-			return btooth_map[i].fmt;
-	}
-
-	return NULL;
+	return _rfkill(rfdev, btooth_map, LEN(btooth_map));
 }
 
 const char *datetime(const void *fmt)
@@ -120,18 +128,7 @@ const char *volume_pulse(const void *sink)
 
 const char *wifi(const void *rfdev)
 {
-	int info;
-	size_t i;
-
-	if (rfkill_getinfo(&info, (char *) rfdev) != 0)
-		return NULL;
-
-	for (i = 0; i < LEN(wifi_map); i++) {
-		if (info == wifi_map[i].status)
-			return wifi_map[i].fmt;
-	}
-
-	return NULL;
+	return _rfkill(rfdev, wifi_map, LEN(wifi_map));
 }
 
 int main(int argc, char *argv[])
