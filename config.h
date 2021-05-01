@@ -9,7 +9,7 @@ static const char unknown_str[] = "n/a";
  * Possible state values: 
  *     "Unknown", "Charging", "Discharging", "Not charging", "Full"
  */
-static const struct map_ps battery_map[] = {
+static const struct ps_map battery_map[] = {
 	/* perc  state           fmt */
 	{ 100,   Charging,       "\uf0e7 %d%%"    },
 	{  10,   Discharging,    "\uf244 %d%%"    },
@@ -26,7 +26,7 @@ static const struct map_ps battery_map[] = {
  * Possible state values:
  *     "Unmute", "Mute"
  */
-static const struct map_ps volume_map[] = {
+static const struct ps_map volume_map[] = {
 	/* perc  state      fmt */
 	{   0,   Unmute,    "\uf026   %ld%%" },
 	{  30,   Unmute,    "\uf027  %ld%%"  },
@@ -39,7 +39,7 @@ static const struct map_ps volume_map[] = {
  * Possible state values: 
  *     "Unblock", "BlockSw", "BlockHw"
  */
-static const struct map_ps btooth_map[] = {
+static const struct ps_map btooth_map[] = {
 	/* perc  state       fmt */
 	{ -1,    Unblock,    "\uf294 on"  },
 	{ -1,    BlockSw,    "\uf294 off" },
@@ -51,7 +51,7 @@ static const struct map_ps btooth_map[] = {
  * Possible state values: 
  *     "Unblock", "BlockSw", "BlockHw"
  */
-static const struct map_ps wifi_map[] = {
+static const struct ps_map wifi_map[] = {
 	/* perc  state       fmt */
 	{ -1,    Unblock,    "\uf1eb on"  },
 	{ -1,    BlockSw,    "\uf1eb off" },
@@ -67,17 +67,18 @@ static const struct mixer mixers[] = {
 /*
  * function            description                      argument                   example
  *
- * battery             battery status and percentage    battery name string        "BAT1"
- * bluetooth           bluetooth state                  rfkill name string         "rfkill1"
+ * battery             battery status and percentage    battery name               "BAT1"
+ * bluetooth           bluetooth state                  rfkill device name         "rfkill1"
  * datetime            date and time                    format string              "%F %T"
- * volume              volume status and percentage     pointer to mixer struct    &mixers[0]
- * wifi                wifi state                       rfkill name string         "rfkill0"
+ * volume_alsa         volume status and percentage     pointer to mixer struct    &mixers[0]
+ * volume_pulse        volume status and percentage     pulseaudio sink name       "alsa_output.pci-0000_00_1b.0.output_analog-stereo"
+ * wifi                wifi state                       rfkill device name         "rfkill0"
  */
 static const struct arg args[] = {
 	/* function         fmt              argument */
 	{ bluetooth,        "%s   ",         "rfkill1" },
 	{ wifi,             "%s   ",         "rfkill0" },
-	{ volume,           "%s   ",         &mixers[0] },
+	{ volume_pulse,     "%s   ",         "alsa_output.pci-0000_00_1b.0.output_analog-stereo" },
 	{ battery,          "%s   ",         "BAT0" },
 	{ datetime,         "%s",            "%b %d, %R" },
 };
