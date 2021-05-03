@@ -3,17 +3,33 @@
 #include "info.h"
 #include "../util.h"
 
-static char *sink_name = NULL;
-static pa_mainloop_api *mainloop_api = NULL;
+static void context_state_callback(pa_context *c, void *userdata)
+{
+	int *ready = userdata;
 
-static void quit(int ret)
-{
-	mainloop_api->quit(mainloop_api, ret);
-}
-static void exit_signal_callback(pa_mainloop_api *m, pa_signal_event *e,
-                                 int sig, void *userdata)
-{
-	quit(0);
+	if (!c) {
+		error("context_state_callback(): Null pa_context");
+		*ready = 2;
+		return;
+	}
+
+	switch (pa_context_get_state(c)) {
+	case PA_CONTEXT_READY:
+		*ready = 1;
+		break;
+	case PA_CONTEXT_FAILED:
+		error("Connection failure: %s",
+		      pa_strerror(pa_context_errno(c)));
+	case PA_CONTEXT_TERMINATED:
+		*ready = 2;
+		break;
+	case PA_CONTEXT_UNCONNECTED:
+	case PA_CONTEXT_CONNECTING:
+	case PA_CONTEXT_AUTHORIZING:
+	case PA_CONTEXT_SETTING_NAME:
+	default:
+		break;
+	}
 }
 
 static void get_sink_info_callback(pa_context *c, const pa_sink_info *i,
@@ -24,89 +40,83 @@ static void get_sink_info_callback(pa_context *c, const pa_sink_info *i,
 	if (is_last < 0) {
 		error("Failed to get sink information: %s",
 		      pa_strerror(pa_context_errno(c)));
-		quit(1);
+		info->status = -1;
 		return;
 	}
-	if (is_last) {
-		pa_context_disconnect(c);
+	if (is_last)
 		return;
-	}
-	if (i) {
-		info->perc = ((uint64_t) pa_cvolume_avg(&(i->volume)) * 100 +
-		              (uint64_t) PA_VOLUME_NORM / 2) /
-		             (uint64_t) PA_VOLUME_NORM;
-		info->status = (i->mute) ? Mute : Unmute;
-	} else {
-		quit(1);
-	}
-}
-
-static void context_state_callback(pa_context *c, void *userdata)
-{
-	pa_operation *o = NULL;
-
-	if (!c) {
-		quit(1);
+	if (!i) {
+		error("get_sink_info_callback(): Null pa_sink_info");
+		info->status = -1;
 		return;
 	}
 
-	switch (pa_context_get_state(c)) {
-	case PA_CONTEXT_CONNECTING:
-	case PA_CONTEXT_AUTHORIZING:
-	case PA_CONTEXT_SETTING_NAME:
-		break;
-	case PA_CONTEXT_READY:
-		o = pa_context_get_sink_info_by_name(c, sink_name,
-		                                     get_sink_info_callback,
-		                                     userdata);
-		if (o)
-			pa_operation_unref(o);
-		break;
-	case PA_CONTEXT_TERMINATED:
-		quit(0);
-		break;
-	case PA_CONTEXT_FAILED:
-	default:
-		error("Connection failure: %s",
-		      pa_strerror(pa_context_errno(c)));
-		quit(1);
-	}
+	info->perc = ((uint64_t) pa_cvolume_avg(&(i->volume)) * 100 +
+	              (uint64_t) PA_VOLUME_NORM / 2) /
+	             (uint64_t) PA_VOLUME_NORM;
+	info->status = (i->mute) ? Mute : Unmute;
 }
 
 int volume_pulse_getinfo(struct ps_info *info, const char *sink)
 {
 	int ret = 1;
-	pa_mainloop *m = NULL;
-	pa_context *context = NULL;
+	int state = 0;
+	int ready = 0;
+	pa_mainloop *ml = NULL;
+	pa_mainloop_api *mlapi = NULL;
+	pa_context *ctx = NULL;
+	pa_operation *op = NULL;
 
-	sink_name = sink;
-
-	if (!(m = pa_mainloop_new())) {
+	if (!(ml = pa_mainloop_new())) {
 		error("pa_mainloop_new() failed.");
 		goto quit;
 	}
-	mainloop_api = pa_mainloop_get_api(m);
-	if (!(context = pa_context_new(mainloop_api, NULL))) {
+	mlapi = pa_mainloop_get_api(ml);
+	if (!(ctx = pa_context_new(mlapi, "tstat"))) {
 		error("pa_context_new() failed.");
-		goto quit;
+		goto quit_ml;
 	}
-	pa_context_set_state_callback(context, context_state_callback, info);
-	if (pa_context_connect(context, NULL, 0, NULL) < 0) {
+	if (pa_context_connect(ctx, NULL, 0, NULL) < 0) {
 		error("pa_context_connect() failed: %s",
-		       pa_strerror(pa_context_errno(context)));
-		goto quit;
+		       pa_strerror(pa_context_errno(ctx)));
+		goto quit_ctx;
 	}
-	if (pa_mainloop_run(m, &ret) < 0) {
-		error("pa_mainloop_run() failed.");
-		goto quit;
-	}
+	pa_context_set_state_callback(ctx, context_state_callback, &ready);
 
+	info->status = 0;
+
+	for (;;) {
+		if (ready == 0) {
+			if (pa_mainloop_iterate(ml, 1, NULL) < 0) {
+				error("pa_mainloop_iterate() failed.");
+				goto quit_disc;
+			}
+			continue;
+		}
+		if (ready == 2)
+			goto quit_disc;
+		if (state == 0) {
+			op = pa_context_get_sink_info_by_name(ctx, sink,
+			         get_sink_info_callback, info);
+			state++;
+		} else if (info->status < 0) {
+			goto quit_disc;
+		} else if (pa_operation_get_state(op) == PA_OPERATION_DONE) {
+			ret = 0;
+			pa_operation_unref(op);
+			goto quit_disc;
+		}
+		if (pa_mainloop_iterate(ml, 1, NULL) < 0) {
+			error("pa_mainloop_iterate() failed.");
+			goto quit_disc;
+		}
+	}
+quit_disc:
+	pa_context_disconnect(ctx);
+quit_ctx:
+	pa_context_unref(ctx);
+quit_ml:
+	pa_mainloop_free(ml);
 quit:
-	if (context)
-		pa_context_unref(context);
-	
-	if (m)
-		pa_mainloop_free(m);
-
 	return ret;
 }
