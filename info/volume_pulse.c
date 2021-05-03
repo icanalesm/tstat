@@ -14,20 +14,22 @@ static void context_state_callback(pa_context *c, void *userdata)
 	}
 
 	switch (pa_context_get_state(c)) {
-	case PA_CONTEXT_READY:
-		*ready = 1;
-		break;
-	case PA_CONTEXT_FAILED:
-		error("Connection failure: %s",
-		      pa_strerror(pa_context_errno(c)));
-	case PA_CONTEXT_TERMINATED:
-		*ready = 2;
-		break;
 	case PA_CONTEXT_UNCONNECTED:
 	case PA_CONTEXT_CONNECTING:
 	case PA_CONTEXT_AUTHORIZING:
 	case PA_CONTEXT_SETTING_NAME:
+		break;
+	case PA_CONTEXT_READY:
+		*ready = 1;
+		break;
+	case PA_CONTEXT_TERMINATED:
+		*ready = 2;
+		break;
+	case PA_CONTEXT_FAILED:
 	default:
+		error("Connection failure: %s",
+		      pa_strerror(pa_context_errno(c)));
+		*ready = 2;
 		break;
 	}
 }
