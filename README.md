@@ -24,7 +24,7 @@ This file is where the compilation and installation options are specified. By de
 
 ## Requirements
 
-In order to build `tstat`, the alsa-lib and libX11 header files are required.
+In order to build `tstat`, libX11, alsa-lib and libpulse are required.
 
 ## Installation
 
