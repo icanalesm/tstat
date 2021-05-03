@@ -72,13 +72,14 @@ static const struct mixer mixers[] = {
  * datetime            date and time                    format string              "%F %T"
  * volume_alsa         volume status and percentage     pointer to mixer struct    &mixers[0]
  * volume_pulse        volume status and percentage     pulseaudio sink name       "alsa_output.pci-0000_00_1b.0.output_analog-stereo"
+ * volume_pulse        volume status and percentage     pulseaudio sink name       "@DEFAULT_SINK@"
  * wifi                wifi state                       rfkill device name         "rfkill0"
  */
 static const struct arg args[] = {
 	/* function         fmt              argument */
 	{ bluetooth,        "%s   ",         "rfkill1" },
 	{ wifi,             "%s   ",         "rfkill0" },
-	{ volume_pulse,     "%s   ",         "alsa_output.pci-0000_00_1b.0.output_analog-stereo" },
+	{ volume_pulse,     "%s   ",         "@DEFAULT_SINK@" },
 	{ battery,          "%s   ",         "BAT0" },
 	{ datetime,         "%s",            "%b %d, %R" } 
 };
