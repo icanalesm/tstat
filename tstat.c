@@ -26,12 +26,12 @@ static const char *_rfkill(const void *rfdev, const struct ps_map *map,
                            size_t len);
 static const char *_ps_stat(struct ps_info *info, const struct ps_map *map,
                             size_t len);
-static const char *battery(const void *battery);
-static const char *bluetooth(const void *rfdev);
-static const char *datetime(const void *fmt);
-static const char *volume_alsa(const void *mixer);
-static const char *volume_pulse(const void *sink);
-static const char *wifi(const void *rfdev);
+const char *battery(const void *battery);
+const char *bluetooth(const void *rfdev);
+const char *datetime(const void *fmt);
+const char *volume_alsa(const void *mixer);
+const char *volume_pulse(const void *sink);
+const char *wifi(const void *rfdev);
 
 static char buf[BFR_MAX];
 
@@ -70,7 +70,7 @@ static const char *_ps_stat(struct ps_info *info, const struct ps_map *map,
 	return NULL;
 }
 
-static const char *battery(const void *battery)
+const char *battery(const void *battery)
 {
 	struct ps_info info;
 
@@ -80,12 +80,12 @@ static const char *battery(const void *battery)
 	return _ps_stat(&info, battery_map, LEN(battery_map));
 }
 
-static const char *bluetooth(const void *rfdev)
+const char *bluetooth(const void *rfdev)
 {
 	return _rfkill(rfdev, btooth_map, LEN(btooth_map));
 }
 
-static const char *datetime(const void *fmt)
+const char *datetime(const void *fmt)
 {
 	time_t t;
 
@@ -98,7 +98,7 @@ static const char *datetime(const void *fmt)
 	return buf;
 }
 
-static const char *volume_alsa(const void *mixer)
+const char *volume_alsa(const void *mixer)
 {
 	struct ps_info info;
 
@@ -108,7 +108,7 @@ static const char *volume_alsa(const void *mixer)
 	return _ps_stat(&info, volume_map, LEN(volume_map));
 }
 
-static const char *volume_pulse(const void *sink)
+const char *volume_pulse(const void *sink)
 {
 	struct ps_info info;
 
@@ -118,7 +118,7 @@ static const char *volume_pulse(const void *sink)
 	return _ps_stat(&info, volume_map, LEN(volume_map));
 }
 
-static const char *wifi(const void *rfdev)
+const char *wifi(const void *rfdev)
 {
 	return _rfkill(rfdev, wifi_map, LEN(wifi_map));
 }
