@@ -102,10 +102,8 @@ int volume_pulse_getinfo(struct ps_info *info, const char *sink)
 			op = pa_context_get_sink_info_by_name(ctx, sink,
 			         get_sink_info_callback, info);
 			state++;
-		} else if (info->status < 0) {
-			goto quit_disc;
 		} else if (pa_operation_get_state(op) == PA_OPERATION_DONE) {
-			ret = 0;
+			ret = (info->status < 0);
 			pa_operation_unref(op);
 			goto quit_disc;
 		}
