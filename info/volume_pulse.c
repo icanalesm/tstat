@@ -9,7 +9,7 @@ static void context_state_callback(pa_context *c, void *userdata)
 
 	if (!c) {
 		error("context_state_callback(): Null pa_context");
-		*ready = 2;
+		*ready = -1;
 		return;
 	}
 
@@ -20,16 +20,16 @@ static void context_state_callback(pa_context *c, void *userdata)
 	case PA_CONTEXT_SETTING_NAME:
 		break;
 	case PA_CONTEXT_READY:
-		*ready = 1;
+		*ready = 2;
 		break;
 	case PA_CONTEXT_TERMINATED:
-		*ready = 2;
+		*ready = 0;
 		break;
 	case PA_CONTEXT_FAILED:
 	default:
 		error("Connection failure: %s",
 		      pa_strerror(pa_context_errno(c)));
-		*ready = 2;
+		*ready = -1;
 		break;
 	}
 }
@@ -62,8 +62,8 @@ static void get_sink_info_callback(pa_context *c, const pa_sink_info *i,
 int volume_pulse_getinfo(struct ps_info *info, const char *sink)
 {
 	int ret = 1;
+	int ready = 1;
 	int state = 0;
-	int ready = 0;
 	pa_mainloop *ml = NULL;
 	pa_mainloop_api *mlapi = NULL;
 	pa_context *ctx = NULL;
@@ -88,15 +88,16 @@ int volume_pulse_getinfo(struct ps_info *info, const char *sink)
 	info->status = 0;
 
 	for (;;) {
-		if (ready == 0) {
+		if (ready == 1) {
 			if (pa_mainloop_iterate(ml, 1, NULL) < 0) {
 				error("pa_mainloop_iterate() failed.");
 				goto quit_disc;
 			}
 			continue;
-		}
-		if (ready == 2)
+		} else if (ready <= 0) {
+			ret = (ready < 0);
 			goto quit_disc;
+		}
 		if (state == 0) {
 			op = pa_context_get_sink_info_by_name(ctx, sink,
 			         get_sink_info_callback, info);
