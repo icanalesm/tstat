@@ -36,26 +36,28 @@ static const struct ps_map volume_map[] = {
 
 /*
  * Bluetooth state map
- * Possible state values: 
- *     "Unblock", "BlockSw", "BlockHw"
+ * Possible state values:
+ *     RFKILL_STATE_UNBLOCKED, RFKILL_STATE_SOFT_BLOCKED,
+ *     RFKILL_STATE_HARD_BLOCKED
  */
-static const struct ps_map btooth_map[] = {
-	/* perc  state       fmt */
-	{ -1,    Unblock,    "\uf294 on"  },
-	{ -1,    BlockSw,    "\uf294 off" },
-	{ -1,    BlockHw,    "\uf294 off" } 
+static const struct rfkill_state_map bluetooth_map[] = {
+	/* state                           fmt */
+	{ RFKILL_STATE_UNBLOCKED,          "\uf294 on"  },
+	{ RFKILL_STATE_SOFT_BLOCKED,       "\uf294 off" },
+	{ RFKILL_STATE_HARD_BLOCKED,       "\uf294 off" }
 };
 
 /*
  * Wi-Fi state map
- * Possible state values: 
- *     "Unblock", "BlockSw", "BlockHw"
+ * Possible state values:
+ *     RFKILL_STATE_UNBLOCKED, RFKILL_STATE_SOFT_BLOCKED,
+ *     RFKILL_STATE_HARD_BLOCKED
  */
-static const struct ps_map wifi_map[] = {
-	/* perc  state       fmt */
-	{ -1,    Unblock,    "\uf1eb on"  },
-	{ -1,    BlockSw,    "\uf1eb off" },
-	{ -1,    BlockHw,    "\uf1eb off" } 
+static const struct rfkill_state_map wifi_map[] = {
+	/* state                           fmt */
+	{ RFKILL_STATE_UNBLOCKED,          "\uf1eb on"  },
+	{ RFKILL_STATE_SOFT_BLOCKED,       "\uf1eb off" },
+	{ RFKILL_STATE_HARD_BLOCKED,       "\uf1eb off" }
 };
 
 /* Mixer device definition */
@@ -68,17 +70,16 @@ static const struct mixer mixers[] = {
  * function            description                      argument                   example
  *
  * battery             battery status and percentage    battery name               "BAT1"
- * bluetooth           bluetooth state                  rfkill device name         "rfkill1"
  * datetime            date and time                    format string              "%F %T"
+ * rfkill              rfkill device state              rfkill device name         "phy0"
  * volume_alsa         volume status and percentage     pointer to mixer struct    &mixers[0]
  * volume_pulse        volume status and percentage     pulseaudio sink name       "alsa_output.pci-0000_00_1b.0.output_analog-stereo"
  * volume_pulse        volume status and percentage     pulseaudio sink name       "@DEFAULT_SINK@"
- * wifi                wifi state                       rfkill device name         "rfkill0"
  */
 static const struct arg args[] = {
 	/* function         fmt              argument */
-	{ bluetooth,        "%s   ",         "rfkill1" },
-	{ wifi,             "%s   ",         "rfkill0" },
+	{ rfkill,           "%s   ",         "hci0" },
+	{ rfkill,           "%s   ",         "phy0" },
 	{ volume_pulse,     "%s   ",         "@DEFAULT_SINK@" },
 	{ battery,          "%s   ",         "BAT0" },
 	{ datetime,         "%s",            "%b %d, %R" } 

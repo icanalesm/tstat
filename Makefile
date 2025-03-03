@@ -22,7 +22,7 @@ options:
 	${CC} ${CFLAGS} ${CPPFLAGS} -c -o $@ $<
 
 tstat: ${REQ:=.o}
-	${CC} ${CFLAGS} ${LDFLAGS} ${LDLIBS} ${REQ:=.o} -o $@
+	${CC} ${CFLAGS} -o $@ ${REQ:=.o} ${LDFLAGS} ${LDLIBS}
 
 clean:
 	rm -f tstat ${REQ:=.o}

@@ -1,5 +1,6 @@
+#include <linux/rfkill.h>
+
 enum { Charging, Discharging, NotCharging, Full, Unknown };
-enum { Unblock, BlockSw, BlockHw };
 enum { Mute, Unmute };
 
 struct ps_info {
@@ -13,9 +14,15 @@ struct mixer {
 	int   index;
 };
 
+struct rfkill_info {
+	enum rfkill_type type;
+	int              soft_state;
+	int              hard_state;
+};
+
 int battery_getinfo(struct ps_info *info, const char *battery);
 
-int rfkill_getinfo(int *info, const char *rfdev);
+int rfkill_getinfo(struct rfkill_info *info, const char *name);
 
 int volume_alsa_getinfo(struct ps_info *info, const struct mixer *mixer);
 

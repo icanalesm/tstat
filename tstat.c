@@ -22,37 +22,22 @@ struct ps_map {
 	char *fmt;
 };
 
-static const char *_rfkill(const void *rfdev, const struct ps_map *map,
-                           size_t len);
+struct rfkill_state_map {
+	int   state;
+	char *fmt;
+};
+
 static const char *_ps_stat(struct ps_info *info, const struct ps_map *map,
                             size_t len);
 const char *battery(const void *battery);
-const char *bluetooth(const void *rfdev);
 const char *datetime(const void *fmt);
+const char *rfkill(const void *name);
 const char *volume_alsa(const void *mixer);
 const char *volume_pulse(const void *sink);
-const char *wifi(const void *rfdev);
 
 static char buf[BFR_MAX];
 
 #include "config.h"
-
-static const char *_rfkill(const void *rfdev, const struct ps_map *map,
-                           size_t len)
-{
-	int info;
-	size_t i;
-
-	if (rfkill_getinfo(&info, (char *) rfdev) != 0)
-		return NULL;
-
-	for (i = 0; i < len; i++) {
-		if (info == map[i].status)
-			return map[i].fmt;
-	}
-
-	return NULL;
-}
 
 static const char *_ps_stat(struct ps_info *info, const struct ps_map *map,
                             size_t len)
@@ -80,11 +65,6 @@ const char *battery(const void *battery)
 	return _ps_stat(&info, battery_map, LEN(battery_map));
 }
 
-const char *bluetooth(const void *rfdev)
-{
-	return _rfkill(rfdev, btooth_map, LEN(btooth_map));
-}
-
 const char *datetime(const void *fmt)
 {
 	time_t t;
@@ -96,6 +76,39 @@ const char *datetime(const void *fmt)
 	}
 
 	return buf;
+}
+
+const char *rfkill(const void *name)
+{
+	struct rfkill_info info;
+	const struct rfkill_state_map *map;
+	int state;
+	size_t len, i;
+
+	if (rfkill_getinfo(&info, (char *) name) != 0)
+		return NULL;
+
+	if (info.hard_state)
+		state = RFKILL_STATE_HARD_BLOCKED;
+	else if (info.soft_state)
+		state = RFKILL_STATE_SOFT_BLOCKED;
+	else
+		state = RFKILL_STATE_UNBLOCKED;
+
+	if (info.type == RFKILL_TYPE_WLAN) {
+		map = wifi_map;
+		len = LEN(wifi_map);
+	} else {
+		map = bluetooth_map;
+		len = LEN(bluetooth_map);
+	}
+
+	for (i = 0; i < len; i++) {
+		if (state == map[i].state)
+			return map[i].fmt;
+	}
+
+	return NULL;
 }
 
 const char *volume_alsa(const void *mixer)
@@ -116,11 +129,6 @@ const char *volume_pulse(const void *sink)
 		return NULL;
 
 	return _ps_stat(&info, volume_map, LEN(volume_map));
-}
-
-const char *wifi(const void *rfdev)
-{
-	return _rfkill(rfdev, wifi_map, LEN(wifi_map));
 }
 
 int main(int argc, char *argv[])
