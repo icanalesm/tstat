@@ -7,18 +7,20 @@ static const char unknown_str[] = "n/a";
 /*
  * Battery state map
  * Possible state values: 
- *     "Unknown", "Charging", "Discharging", "Not charging", "Full"
+ *     POWER_SUPPLY_STATUS_UNKNOWN, POWER_SUPPLY_STATUS_CHARGING,
+ *     POWER_SUPPLY_STATUS_DISCHARGING, POWER_SUPPLY_STATUS_NOT_CHARGING,
+ *     POWER_SUPPLY_STATUS_FULL
  */
 static const struct ps_map battery_map[] = {
-	/* perc  state           fmt */
-	{ 100,   Charging,       "\uf0e7 %d%%"    },
-	{  10,   Discharging,    "\uf244 %d%%"    },
-	{  35,   Discharging,    "\uf243 %d%%"    },
-	{  60,   Discharging,    "\uf242 %d%%"    },
-	{  80,   Discharging,    "\uf241 %d%%"    },
-	{ 100,   Discharging,    "\uf240 %d%%"    },
-	{ 100,   Full,           "\uf1e6 %d%%"    },
-	{ 100,   Unknown,        "\uf244(?) %d%%" } 
+	/* perc  state                               fmt */
+	{ 100,   POWER_SUPPLY_STATUS_CHARGING,       "\uf0e7 %d%%"    },
+	{  10,   POWER_SUPPLY_STATUS_DISCHARGING,    "\uf244 %d%%"    },
+	{  35,   POWER_SUPPLY_STATUS_DISCHARGING,    "\uf243 %d%%"    },
+	{  60,   POWER_SUPPLY_STATUS_DISCHARGING,    "\uf242 %d%%"    },
+	{  80,   POWER_SUPPLY_STATUS_DISCHARGING,    "\uf241 %d%%"    },
+	{ 100,   POWER_SUPPLY_STATUS_DISCHARGING,    "\uf240 %d%%"    },
+	{ 100,   POWER_SUPPLY_STATUS_FULL,           "\uf1e6 %d%%"    },
+	{ 100,   POWER_SUPPLY_STATUS_UNKNOWN,        "\uf244(?) %d%%" } 
 };
 
 /*

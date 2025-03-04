@@ -1,14 +1,16 @@
 #include <linux/rfkill.h>
 
-enum { Charging, Discharging, NotCharging, Full, Unknown };
 enum { Mute, Unmute };
 
 /**
- * Percentage and status information.
+ * Possible states of a battery
  */
-struct ps_info {
-	int perc;   /**< Percentage. */
-	int status; /**< State of the device. */
+enum battery_state {
+        POWER_SUPPLY_STATUS_UNKNOWN = 0,
+        POWER_SUPPLY_STATUS_CHARGING,
+        POWER_SUPPLY_STATUS_DISCHARGING,
+        POWER_SUPPLY_STATUS_NOT_CHARGING,
+        POWER_SUPPLY_STATUS_FULL,
 };
 
 /**
@@ -21,22 +23,30 @@ struct mixer {
 };
 
 /**
+ * Percentage and state information.
+ */
+struct ps_info {
+        int perc;   /**< Percentage. */
+        int status; /**< State of the device. */
+};
+
+/**
  * Information of an rfkill device.
  */
 struct rfkill_info {
-	enum rfkill_type type;       /**< Type of rfkill device. */
-	int              soft_state; /**< Softblock state. */
-	int              hard_state; /**< Hardblock state. */
+        enum rfkill_type type;       /**< Type of rfkill device. */
+        int              soft_state; /**< Softblock state. */
+        int              hard_state; /**< Hardblock state. */
 };
 
 /**
  * Obtain information of a battery.
  *
- * Obtain the capacity in percentage and status of a battery. The possible
- * status are "Unknown", "Charging", "Discharging", "Not charging" and "Full".
+ * Obtain the capacity in percentage and status of a battery.
  *
  * @param info Pointer to store the information in.
  * @param battery Name of the battery.
+ * @return 0 on success or -1 if an error occurred.
  */
 int battery_getinfo(struct ps_info *info, const char *battery);
 
