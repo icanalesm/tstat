@@ -1,6 +1,6 @@
 # tstat
 
-Linux utility to get the status of some devices.
+Linux utility to get the status of some devices. `tstat` is heavily inspired by [slstatus](https://tools.suckless.org/slstatus/).
 
 Currently, `tstat` can display the following information:
 
@@ -56,6 +56,8 @@ For window managers that use the `WM_NAME X11` property of the root window to se
 tstat set
 ```
 
-## Acknowledgements
+## License
 
-`tstat` is based on [slstatus](https://tools.suckless.org/slstatus/).
+`tstat` is licensed under the MIT License; see [LICENSE](LICENSE).
+
+Some of the code is either modified code or code taken from other projects; see [NOTICE](NOTICE).
