@@ -17,9 +17,9 @@ enum battery_state {
  * Definition of an ALSA device.
  */
 struct mixer {
-	char *card;  /**< ALSA card. */
-	char *name;  /**< ALSA name. */
-	int   index; /**< ALSA index. */
+        char *card;  /**< ALSA card. */
+        char *name;  /**< ALSA name. */
+        int   index; /**< ALSA index. */
 };
 
 /**

@@ -24,7 +24,7 @@ int esnprintf(char *buffer, size_t bfsz, const char *fmt, ...)
         va_start(va, fmt);
         ret = vsnprintf(buffer, bfsz, fmt, va);
         va_end(va);
-        
+
         if (ret < 0)
                 error("esnprintf: %s", strerror(errno));
         else if ((size_t)ret >= bfsz)
